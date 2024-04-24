@@ -9,6 +9,28 @@ import requests
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
 
+    ## Lines 14-30 - testing the retrieval of keys from azure api management services, for authentication at code level.
+    # Authenticate using Azure Identity library
+    #credential = ManagedIdentityCredential()
+
+    # Initialize the API Management client
+    #api_management_client = ApiManagementClient(credential, "354dc932-d149-4ae0-8a2d-258fa419e9ca")
+
+    # Retrieve the API Management service resource
+    #api_management_service = api_management_client.api_management_service.get(
+    #    "TEST-RGRP-API",
+    #    "TEST-APIMGR-1"
+    #)
+
+    #keys = api_management_service.additional_properties.keys
+    #keys = api_management_service.properties.identity.keys
+    #keys = api_management_service.properties.sku.properties.identity.keys
+    #keys = api_management_service.identity.keys
+    
+    #logging.info('keys are:')
+    #for key in keys:
+    #    logging.info(key)
+
     #Initialise the status code and header check values.
     status_code = ''
     headercheck = 0
@@ -22,7 +44,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     # url for result API to return results
     url = 'https://result-api.dev.ultromics.net/api/QueryResults'
     # Keys expected to be found in the request
-    expectedkeys = ['SERVICE','PRODUCT','ACCESSION','STUDYINSTANCEUID']
+    expectedkeys = ['SERVICE','PRODUCT','ACCESSION','STUDYINSTANCEUID','SUBSCRIPTION-KEY']
 
     # Checks if the Content-Type header is of accepted values
     if 'Content-Type' in req.headers and req.headers['Content-Type'].upper() in ('APPLICATION/JSON', 'APPLICATION/X-WWW-FORM-URLENCODED'):
@@ -34,7 +56,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         headercheck = 1
 
     # Exits if header value is incorrect
-    logging.info('Header: ' + str(header_value))
+    # setting header check to 1 for sake of testing - 24042024 - please remove
+    headercheck = 1
     if headercheck != 1:
         logging.info('header issue')
         status_code = 400
@@ -44,7 +67,10 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     if method == 'GET':
         parsed_url = urlparse(req.url)
         query_params = parse_qs(parsed_url.query)
-        query_params.pop('code')
+        logging.info(str(query_params))
+        if 'code' in query_params:
+            query_params.pop('code')
+
         # Create a new dictionary with uppercase keys and values
         uppercase_query_params = {key.upper(): [value.upper() for value in values] for key, values in query_params.items()}
 
