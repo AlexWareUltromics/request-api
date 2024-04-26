@@ -1,5 +1,3 @@
-from azure.identity import ManagedIdentityCredential
-from azure.mgmt.apimanagement import ApiManagementClient
 from urllib.parse import urlparse, parse_qs
 import azure.functions as func
 import json
@@ -8,28 +6,6 @@ import re
 import requests
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
-
-    ## Lines 14-30 - testing the retrieval of keys from azure api management services, for authentication at code level.
-    # Authenticate using Azure Identity library
-    #credential = ManagedIdentityCredential()
-
-    # Initialize the API Management client
-    #api_management_client = ApiManagementClient(credential, "354dc932-d149-4ae0-8a2d-258fa419e9ca")
-
-    # Retrieve the API Management service resource
-    #api_management_service = api_management_client.api_management_service.get(
-    #    "TEST-RGRP-API",
-    #    "TEST-APIMGR-1"
-    #)
-
-    #keys = api_management_service.additional_properties.keys
-    #keys = api_management_service.properties.identity.keys
-    #keys = api_management_service.properties.sku.properties.identity.keys
-    #keys = api_management_service.identity.keys
-    
-    #logging.info('keys are:')
-    #for key in keys:
-    #    logging.info(key)
 
     #Initialise the status code and header check values.
     status_code = ''
@@ -57,7 +33,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     # Exits if header value is incorrect
     # setting header check to 1 for sake of testing - 24042024 - please remove
-    headercheck = 1
+    #headercheck = 1
     if headercheck != 1:
         logging.info('header issue')
         status_code = 400
